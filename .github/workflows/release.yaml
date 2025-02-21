@@ -1,7 +1,7 @@
 on:
   push:
     tags:
-      - 'v*' # 触发所有以v开头的tag，比如 v1.0.0
+      - 'v*'
 
 permissions:
   contents: write
