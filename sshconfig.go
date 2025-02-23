@@ -6,8 +6,8 @@ import (
 )
 
 type SSHConfig struct {
-	Host, HostName, User, IdentityFile string
-	Port                               string
+	Host, HostName, User, IdentityFile, ProxyCommand string
+	Port                                             string
 }
 
 const tpl = `
@@ -15,7 +15,8 @@ Host {{.Host}}
     HostName {{.HostName}}
     {{if .User}}User {{.User}}{{end}}
     {{if .IdentityFile}}IdentityFile {{.IdentityFile}}{{end}}
-    {{if .Port}}Port {{.Port}}{{end}}	
+    {{if .Port}}Port {{.Port}}{{end}}
+    {{if .ProxyCommand}}ProxyCommand {{.ProxyCommand}}{{end}}
 `
 
 func GenConfig(cfgs []SSHConfig) (*bytes.Buffer, error) {
