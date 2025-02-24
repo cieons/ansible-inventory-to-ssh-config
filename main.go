@@ -6,6 +6,7 @@ import (
 	"log"
 	"log/slog"
 	"os"
+	"regexp"
 
 	"github.com/relex/aini"
 )
@@ -36,10 +37,18 @@ func main() {
 		port := item.Vars["ansible_ssh_port"]
 		user := item.Vars["ansible_ssh_user"]
 		identityFile := item.Vars["ansible_ssh_private_key_file"]
+		args := item.Vars["ansible_ssh_common_args"]
 
 		if host == "" {
 			slog.Warn(fmt.Sprintf("[%s] empty host, skip", item.Name))
 			continue
+		}
+
+		var proxyCommand string
+		// regex match ProxyCommand
+		re := regexp.MustCompile(`ProxyCommand="([^"]+)"`)
+		if re.MatchString(args) {
+			proxyCommand = re.FindStringSubmatch(args)[1]
 		}
 
 		cfgs = append(cfgs, SSHConfig{
@@ -48,6 +57,7 @@ func main() {
 			User:         user,
 			IdentityFile: identityFile,
 			Port:         port,
+			ProxyCommand: proxyCommand,
 		})
 	}
 
